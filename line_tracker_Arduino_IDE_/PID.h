@@ -7,13 +7,13 @@
 class PID
 {
   private:
-    int16_t kp, ki, kd;
-    int16_t p_gain, i_gain, d_gain;
+    float kp, ki, kd;
+    float p_gain, i_gain, d_gain;
     int16_t err;
     int16_t angular, linear;
 
   public:
-    PID(int16_t _kp, int16_t _ki, int16_t _kd)
+    PID(float _kp, float _ki, float _kd)
     : kp(_kp), ki(_ki), kd(_kd), 
       err(0),
       p_gain(0), i_gain(0), d_gain(0)
@@ -25,6 +25,7 @@ class PID
         i_gain += ki * new_err; // integrate i gain
         d_gain = kd * (new_err - err); // calculate the d gain
         err = new_err; // update the error
+        i_gain = constrain(i_gain, -255, 255);
         int16_t total_gain = p_gain + i_gain + d_gain;
         angular = total_gain;
         if(angular != 0){

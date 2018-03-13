@@ -30,8 +30,8 @@ class Motor
 
     void write(int16_t linear, int16_t angular){
         // calculate the speed for each motor
-        int16_t left_speed = linear - angular / 2;
-        int16_t right_speed = linear + angular / 2;
+        int16_t left_speed = constrain(linear - angular / 2, -255, 255);
+        int16_t right_speed = constrain(linear + angular / 2, -255, 255);
 
         Side L = left;
         Side R = right;
