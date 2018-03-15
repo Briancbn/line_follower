@@ -50,7 +50,7 @@ class PID
             index = 0;
         }
         if(angular != 0){
-            linear = MAX_ANGULAR_POWER - abs(angular) / 1.5;
+            linear = MAX_ANGULAR_POWER - abs(angular) / 2;
         }
         else
         {

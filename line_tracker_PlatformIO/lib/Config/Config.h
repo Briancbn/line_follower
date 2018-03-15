@@ -30,9 +30,9 @@
 #define MAX_ANGULAR_POWER 255
 
 
-#define KP 10
+#define KP 11
 #define KI 0
-#define KD 130
+#define KD 125
 
 #define LED 12
 #define NUM_LEDS 8

@@ -26,7 +26,8 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUM_LEDS, LED, NEO_GRB + NEO_KHZ800
 
 void LDR_trigger(){
   while (true){
-    uint16_t LDR_reading = analogRead(LDR);      Serial.println(LDR_reading);
+    uint16_t LDR_reading = analogRead(LDR);     
+    Serial.println(LDR_reading);
     if(LDR_reading < THRESHOLD){
        break;
     }
