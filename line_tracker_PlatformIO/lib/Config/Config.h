@@ -24,15 +24,15 @@
 #define IR_RATIO 100
 
 // max linear power
-#define MAX_LINEAR_POWER 230
+#define MAX_LINEAR_POWER 255
 
 // max power for a single motor in an angular motion 
-#define MAX_ANGULAR_POWER 190
+#define MAX_ANGULAR_POWER 255
 
 
 #define KP 10
 #define KI 0
-#define KD 80
+#define KD 130
 
 #define LED 12
 #define NUM_LEDS 8
