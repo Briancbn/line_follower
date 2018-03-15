@@ -2,6 +2,8 @@
 #define CONFIG_H
 
 
+#define THRESHOLD 300
+
 // Define positive direction
 #define L_FORWARD LOW 
 #define R_FORWARD HIGH
@@ -13,6 +15,7 @@
 #define R_DIRECTION 7
 
 // Assign analog IR sensor pins
+#define LDR A0
 #define L_IR2 A1
 #define L_IR1 A2
 #define M_IR A3
@@ -21,15 +24,18 @@
 #define IR_RATIO 100
 
 // max linear power
-#define MAX_LINEAR_POWER 255
+#define MAX_LINEAR_POWER 230
 
 // max power for a single motor in an angular motion 
-#define MAX_ANGULAR_POWER 170
+#define MAX_ANGULAR_POWER 190
 
 
-#define KP 6.3
-#define KI 0.05
-#define KD 0
+#define KP 10
+#define KI 0
+#define KD 80
+
+#define LED 12
+#define NUM_LEDS 8
 
 
 /*

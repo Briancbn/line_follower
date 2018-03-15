@@ -57,12 +57,12 @@ class Motor
         else{
             if(speed > 0 /* moving forward */){
                 digitalWrite(R_DIRECTION, R_FORWARD);
-                analogWrite(R_POWER, speed);
+                analogWrite(R_POWER, speed-9);
             }
             else/*stop or moving backward*/{
                 speed = -speed; // get the absolute value of speed
                 digitalWrite(R_DIRECTION, !R_FORWARD);
-                analogWrite(R_POWER, speed);                
+                analogWrite(R_POWER, speed-9);                
             }
         }
     }

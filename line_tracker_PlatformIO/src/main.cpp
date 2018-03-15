@@ -9,17 +9,40 @@
 
 #include "Arduino.h"
 
+
 #include "Config.h"
 #include "Motor.h"
 #include "PID.h"
 
+#include "Adafruit_NeoPixel.h"
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
+
 Motor robot;
 PID pid_controller(KP, KI, KD);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUM_LEDS, LED, NEO_GRB + NEO_KHZ800);
 
-void setup()
-{
-  Serial.begin(115200);
+
+void LDR_trigger(){
+  while (true){
+    uint16_t LDR_reading = analogRead(LDR);      Serial.println(LDR_reading);
+    if(LDR_reading < THRESHOLD){
+       break;
+    }
+  }
 }
+
+void LED_write(int r_value, int g_value, int b_value){
+  for(int i=0;i<NUM_LEDS;i++){
+    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
+    pixels.setPixelColor(i, pixels.Color(r_value, g_value, b_value)); // Moderately bright green color.
+  }  
+  pixels.show();
+
+}
+
+
 
 void print_sensor_readings(int16_t R2_reading, int16_t R1_reading, int16_t M_reading, int16_t L1_reading, int16_t L2_reading){
 
@@ -36,8 +59,22 @@ void print_sensor_readings(int16_t R2_reading, int16_t R1_reading, int16_t M_rea
 
 }
 
+void setup()
+{
+  Serial.begin(115200);
+  pinMode(LDR, INPUT);
+  pixels.begin();
+  LED_write(0,0,255);
+  LDR_trigger();
+  LED_write(255,0,0);
+}
+
+
+
+
 void loop()
 {
+  
   int16_t R2_reading = analogRead(R_IR2)/IR_RATIO; //Manual calibration
   int16_t R1_reading = analogRead(R_IR1)/IR_RATIO;
   int16_t M_reading = analogRead(M_IR)/IR_RATIO;
