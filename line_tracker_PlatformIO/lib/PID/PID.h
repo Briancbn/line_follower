@@ -4,8 +4,6 @@
 #include "Arduino.h"
 #include "Config.h"
 
-#define err_length 70
-
 class PID
 {
   private:
@@ -13,10 +11,35 @@ class PID
     float p_gain, i_gain, d_gain;
     int16_t err;
     int16_t angular, linear;
-    int16_t err_h[err_length];
-    int16_t err_threshold = 70;
-    int16_t err_threshold2 = 30;
+    int16_t angular_h[ANGULAR_HISTORY_LENGTH];
     int16_t index;
+
+    const void record_angular(){
+        angular_h[index] = angular;
+        index += 1;
+        if(index == ANGULAR_HISTORY_LENGTH){
+            index = 0;
+        }
+    }
+
+    const void classify_angular_type(){
+        int angular_sum = sum_angular();
+        if(abs(angular_sum) < GRADUAL_TURN_THRESHOLD){
+            angular = angular_sum / ANGULAR_HISTORY_LENGTH;
+        }
+        else if(abs(angular_sum) < STRAIGHT_THRESHOLD){
+            angular = 0;
+        }
+    }
+
+    const int16_t sum_angular(){
+        int sum = 0;
+        for(int i  = 0; i < ANGULAR_HISTORY_LENGTH; i++){
+            sum += angular_h[i];
+        }
+        return sum;
+    }
+
 
   public:
     PID(float _kp, float _ki, float _kd)
@@ -24,8 +47,8 @@ class PID
       err(0), index(0),
       p_gain(0), i_gain(0), d_gain(0)
     {
-        for(int i = 0; i < err_length; i++){
-            err_h[i] = 0;
+        for(int i = 0; i < ANGULAR_HISTORY_LENGTH; i++){
+            angular_h[i] = 0;
         }
     }
 
@@ -37,18 +60,12 @@ class PID
         i_gain = constrain(i_gain, -255, 255);
         int16_t total_gain = p_gain + i_gain + d_gain;
         angular = total_gain;
-        err_h[index] = angular;
-        index += 1;
-        int angular_sum = sum_angular();
-        if(abs(sum_angular()) < err_threshold){
-            angular = angular_sum / err_length;
+
+        if(LINE_STATE_DETERMINATION){
+            record_angular();
+            classify_angular_type();
         }
-        if(abs(sum_angular()) < err_threshold2){
-            angular = 0;
-        }
-        if(index == err_length){
-            index = 0;
-        }
+
         if(angular != 0){
             linear = MAX_ANGULAR_POWER - abs(angular) / 2;
         }
@@ -66,13 +83,6 @@ class PID
         return linear;
     }
 
-    int16_t sum_angular(){
-        int sum = 0;
-        for(int i  = 0; i < err_length; i++){
-            sum += err_h[i];
-        }
-        return sum;
-    }
 };
 
 #endif
